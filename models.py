@@ -11,7 +11,7 @@ class User(BaseModel):
 class Chat(BaseModel):
     id: str
     name: str
-    users: [User]
+    users: [User.id]
     created_at: datetime
 
 

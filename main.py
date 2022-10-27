@@ -1,6 +1,8 @@
+from models import User
 from fastapi import FastAPI
-from utils import create_user
 from dotenv import load_dotenv
+from utils import create_user, create_chat
+
 
 app = FastAPI()
 load_dotenv('.env')
@@ -15,3 +17,9 @@ async def root():
 async def read_user(username: str):
     user = create_user(username)
     return user
+
+
+@app.post('/chat/add')
+async def read_chat(name: str, users: [User.id]):
+    chat = create_chat(name, users)
+    return chat
