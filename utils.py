@@ -30,3 +30,9 @@ def create_message(chat: Chat.id, author: User.id, text: str):
     message.created_at = datetime.datetime.now()
     #  TODO: Add message to db
     return message
+
+
+def get_chats(user: User.id):
+    chats = []
+    # TODO: Get all chats in which the user is a member
+    return chats
