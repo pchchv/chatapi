@@ -1,10 +1,12 @@
+import random
+import string
 import datetime
 from models import User, Chat, Message
 
 
 def create_user(name: str):
     user = User
-    # TODO: Generate id
+    user.id = generate_id()
     user.username = name
     user.created_at = datetime.datetime.now()
     # TODO: Add user to db
@@ -13,7 +15,7 @@ def create_user(name: str):
 
 def create_chat(name: str, users: [User.id]):
     chat = Chat
-    # TODO: Generate id
+    chat.id = generate_id()
     chat.name = name
     chat.users = users
     chat.created_at = datetime.datetime.now()
@@ -23,7 +25,7 @@ def create_chat(name: str, users: [User.id]):
 
 def create_message(chat: Chat.id, author: User.id, text: str):
     message = Message
-    # TODO: Generate id
+    message = generate_id()
     message.chat = chat
     message.author = author
     message.text = text
@@ -42,3 +44,8 @@ def get_messages(chat: Chat.id):
     messages = []
     # TODO: Get all messages from chat
     return messages
+
+
+def generate_id():
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for i in range(random.randint(5, 25)))
