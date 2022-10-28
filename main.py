@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from models import User, Chat
 from dotenv import load_dotenv
-from utils import create_user, create_chat, create_message, get_chats
+from utils import create_user, create_chat, create_message, get_chats, get_messages
 
 
 app = FastAPI()
@@ -35,3 +35,9 @@ async def read_message(chat: Chat.id, author: User.id, text: str):
 async def read_chats(user: User.id):
     chats = get_chats(user)
     return chats
+
+
+@app.get('/message')
+async def read_messages(chat: Chat.id):
+    messages = get_messages(chat)
+    return messages

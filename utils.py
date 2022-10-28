@@ -36,3 +36,9 @@ def get_chats(user: User.id):
     chats = []
     # TODO: Get all chats in which the user is a member
     return chats
+
+
+def get_messages(chat: Chat.id):
+    messages = []
+    # TODO: Get all messages from chat
+    return messages
