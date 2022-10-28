@@ -1,11 +1,17 @@
+import os
 from fastapi import FastAPI
 from models import User, Chat
 from dotenv import load_dotenv
+from pymongo import MongoClient
 from utils import create_user, create_chat, create_message, get_chats, get_messages
 
 
 app = FastAPI()
 load_dotenv('.env')
+client = MongoClient(os.getenv('MONGO'))
+db = client['chat']
+users = db.users
+chats = db.chats
 
 
 @app.get('/')
@@ -33,8 +39,8 @@ async def read_message(chat: Chat.id, author: User.id, text: str):
 
 @app.get('/chat')
 async def read_chats(user: User.id):
-    chats = get_chats(user)
-    return chats
+    chat = get_chats(user)
+    return chat
 
 
 @app.get('/message')
