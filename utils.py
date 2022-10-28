@@ -1,5 +1,5 @@
 import datetime
-from models import User,  Chat
+from models import User, Chat, Message
 
 
 def create_user(name: str):
@@ -18,3 +18,15 @@ def create_chat(name: str, users: [User.id]):
     chat.users = users
     chat.created_at = datetime.datetime.now()
     # TODO: Add chat to db
+    return chat
+
+
+def create_message(chat: Chat.id, author: User.id, text: str):
+    message = Message
+    # TODO: Generate id
+    message.chat = chat
+    message.author = author
+    message.text = text
+    message.created_at = datetime.datetime.now()
+    #  TODO: Add message to db
+    return message
