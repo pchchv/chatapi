@@ -45,6 +45,21 @@ func getEnvValue(v string) string {
 	return value
 }
 
+func userCreator(name string) (User, error) {
+	u := User{}
+	u.Id = idGenerator()
+	u.Username = name
+	u.Created_at = time.Now()
+	// TODO: Add a user to the db
+	return u, nil
+}
+
+func idGenerator() string {
+	var id string
+	// TODO: Generate id
+	return id
+}
+
 func main() {
 	server()
 }

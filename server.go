@@ -14,10 +14,20 @@ func pingHandler(c echo.Context) error {
 	return c.String(http.StatusOK, message)
 }
 
+func addUser(c echo.Context) error {
+	username := c.QueryParam("name")
+	user, err := userCreator(username)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	return c.JSON(http.StatusOK, user)
+}
+
 // The declaration of all routes comes from it
 func routes(e *echo.Echo) {
 	e.GET("/", pingHandler)
 	e.GET("/ping", pingHandler)
+	e.POST("/user", addUser)
 }
 
 func server() {
