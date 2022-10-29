@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -83,6 +84,20 @@ func userCreator(name string) (User, error) {
 
 func chatCreator(json_map map[string]interface{}) (Chat, error) {
 	var chat Chat
+	var err error
+	chat.Id, err = idGenerator("c")
+	if err != nil {
+		return chat, err
+	}
+	for k, v := range json_map {
+		if k == "name" {
+			chat.Name = fmt.Sprint(v)
+		}
+		if k == "users" {
+			// TODO: convert interface to array
+		}
+	}
+	chat.Created_at = time.Now()
 	return chat, nil
 }
 
@@ -110,6 +125,6 @@ func strGenerator(charset string, length int) string {
 }
 
 func main() {
-	db()
+	// db()
 	server()
 }
