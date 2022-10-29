@@ -64,7 +64,7 @@ func getEnvValue(v string) string {
 }
 
 func userCreator(name string) (User, error) {
-	usr, err := userGetter("name", name)
+	usr, err := dbGetter(usersCollection, "name", name)
 	if err == nil {
 		return usr, errors.New("User already exists")
 	}
@@ -102,7 +102,7 @@ func chatCreator(json_map map[string]interface{}) (Chat, error) {
 			case reflect.Slice:
 				s := reflect.ValueOf(v)
 				for i := 0; i < s.Len(); i++ {
-					usr, err = userGetter("id", fmt.Sprint(s.Index(i)))
+					usr, err = dbGetter(usersCollection, "id", fmt.Sprint(s.Index(i)))
 					if err != nil {
 						return chat, err
 					}
@@ -136,9 +136,9 @@ func messageCreator(json_map map[string]interface{}) (Message, error) {
 	return message, err
 }
 
-func userGetter(title string, value string) (User, error) {
+func dbGetter(collection *mongo.Collection, title string, value string) (User, error) {
 	var result User
-	res := usersCollection.FindOne(context.TODO(), bson.M{title: value})
+	res := collection.FindOne(context.TODO(), bson.M{title: value})
 	err := res.Decode(result)
 	if err != nil {
 		return result, errors.New("User not found")
