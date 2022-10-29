@@ -43,6 +43,7 @@ const (
 
 var (
 	usersCollection *mongo.Collection
+	chatsCollection *mongo.Collection
 	seededRand      *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 )
 
@@ -111,6 +112,14 @@ func chatCreator(json_map map[string]interface{}) (Chat, error) {
 		}
 	}
 	chat.Created_at = time.Now()
+	b, err := bson.Marshal(usr)
+	if err != nil {
+		return chat, err
+	}
+	_, err = chatsCollection.InsertOne(context.TODO(), b)
+	if err != nil {
+		return chat, err
+	}
 	return chat, nil
 }
 
@@ -148,6 +157,6 @@ func strGenerator(charset string, length int) string {
 }
 
 func main() {
-	// db()
+	db()
 	server()
 }

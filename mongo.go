@@ -22,4 +22,5 @@ func db() {
 	}
 	log.Println("Connected to MongoDB!")
 	usersCollection = client.Database(getEnvValue("DATABASE")).Collection("users")
+	chatsCollection = client.Database(getEnvValue("DATABASE")).Collection("chats")
 }
