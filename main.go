@@ -3,9 +3,31 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 )
+
+type User struct {
+	Id         string
+	Username   string
+	Created_at time.Time
+}
+
+type Chat struct {
+	Id         string
+	Name       string
+	Users      []User
+	Created_at time.Time
+}
+
+type Message struct {
+	Id         string
+	Chat       Chat
+	Author     User
+	Text       string
+	Created_at time.Time
+}
 
 func init() {
 	// Load values from .env into the system
