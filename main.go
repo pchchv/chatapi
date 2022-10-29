@@ -131,8 +131,23 @@ func messageCreator(json_map map[string]interface{}) (Message, error) {
 		return message, err
 	}
 	for k, v := range json_map {
-		fmt.Println(k, v)
+		switch k {
+		case "text":
+			message.Text = fmt.Sprint(v)
+		case "chat":
+			_ = fmt.Sprint(v)
+			message.Chat, err = chatGetter("id", fmt.Sprint(v))
+			if err != nil {
+				return message, err
+			}
+		case "author":
+			message.Author, err = userGetter("id", fmt.Sprint(v))
+			if err != nil {
+				return message, err
+			}
+		}
 	}
+	message.Created_at = time.Now()
 	return message, err
 }
 
@@ -142,6 +157,16 @@ func userGetter(title string, value string) (User, error) {
 	err := res.Decode(result)
 	if err != nil {
 		return result, errors.New("User not found")
+	}
+	return result, nil
+}
+
+func chatGetter(title string, value string) (Chat, error) {
+	var result Chat
+	res := chatsCollection.FindOne(context.TODO(), bson.M{title: value})
+	err := res.Decode(result)
+	if err != nil {
+		return result, errors.New("Chat not found")
 	}
 	return result, nil
 }
@@ -170,6 +195,6 @@ func strGenerator(charset string, length int) string {
 }
 
 func main() {
-	// db()
+	db()
 	server()
 }
