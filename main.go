@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"log"
+	"math/rand"
 	"os"
 	"time"
 
@@ -29,6 +31,14 @@ type Message struct {
 	Created_at time.Time
 }
 
+const (
+	letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	numbers = "0123456789"
+)
+
+var seededRand *rand.Rand = rand.New(
+	rand.NewSource(time.Now().UnixNano()))
+
 func init() {
 	// Load values from .env into the system
 	if err := godotenv.Load(); err != nil {
@@ -46,18 +56,40 @@ func getEnvValue(v string) string {
 }
 
 func userCreator(name string) (User, error) {
+	// TODO: Checking user existence
 	u := User{}
-	u.Id = idGenerator()
+	var err error
+	u.Id, err = idGenerator("u")
+	if err != nil {
+		return u, err
+	}
 	u.Username = name
 	u.Created_at = time.Now()
 	// TODO: Add a user to the db
 	return u, nil
 }
 
-func idGenerator() string {
-	var id string
-	// TODO: Generate id
-	return id
+func idGenerator(mode string) (string, error) {
+	id := strGenerator(numbers, 1+rand.Intn(5)) + strGenerator(letters+numbers, 1+rand.Intn(5))
+	switch mode {
+	case "u":
+		id = "uuu" + id
+	case "c":
+		id = "chh" + id
+	case "m":
+		id = "sss" + id
+	default:
+		return id, errors.New("Mode error")
+	}
+	return id, nil
+}
+
+func strGenerator(charset string, length int) string {
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
 }
 
 func main() {
