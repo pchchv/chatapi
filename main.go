@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"log"
 	"math/rand"
@@ -8,6 +9,8 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type User struct {
@@ -36,8 +39,10 @@ const (
 	numbers = "0123456789"
 )
 
-var seededRand *rand.Rand = rand.New(
-	rand.NewSource(time.Now().UnixNano()))
+var (
+	usersCollection *mongo.Collection
+	seededRand      *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+)
 
 func init() {
 	// Load values from .env into the system
@@ -65,7 +70,14 @@ func userCreator(name string) (User, error) {
 	}
 	u.Username = name
 	u.Created_at = time.Now()
-	// TODO: Add a user to the db
+	b, err := bson.Marshal(u)
+	if err != nil {
+		return u, err
+	}
+	_, err = usersCollection.InsertOne(context.TODO(), b)
+	if err != nil {
+		return u, err
+	}
 	return u, nil
 }
 
@@ -93,5 +105,6 @@ func strGenerator(charset string, length int) string {
 }
 
 func main() {
+	db()
 	server()
 }
