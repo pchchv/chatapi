@@ -40,7 +40,7 @@
 
 ```json
 {
-    "Name" : "Alex's birthday",
+    "name" : "Alex's birthday",
     "users": ["3333x45if", "454x8548o", "112y5641654"]
 }
 ```
