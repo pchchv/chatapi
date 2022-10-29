@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -84,21 +85,42 @@ func userCreator(name string) (User, error) {
 
 func chatCreator(json_map map[string]interface{}) (Chat, error) {
 	var chat Chat
+	var usr User
 	var err error
 	chat.Id, err = idGenerator("c")
 	if err != nil {
 		return chat, err
 	}
 	for k, v := range json_map {
-		if k == "name" {
+		switch k {
+		case "name":
 			chat.Name = fmt.Sprint(v)
-		}
-		if k == "users" {
-			// TODO: convert interface to array
+		case "users":
+			switch reflect.TypeOf(v).Kind() {
+			case reflect.Slice:
+				s := reflect.ValueOf(v)
+				for i := 0; i < s.Len(); i++ {
+					usr, err = userGetter(fmt.Sprint(s.Index(i)))
+					if err != nil {
+						return chat, err
+					}
+					chat.Users = append(chat.Users, usr)
+				}
+			}
 		}
 	}
 	chat.Created_at = time.Now()
 	return chat, nil
+}
+
+func userGetter(id string) (User, error) {
+	var result User
+	res := usersCollection.FindOne(context.TODO(), bson.M{"id": id})
+	err := res.Decode(result)
+	if err != nil {
+		return result, errors.New("User not found")
+	}
+	return result, nil
 }
 
 func idGenerator(mode string) (string, error) {
