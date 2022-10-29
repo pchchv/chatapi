@@ -63,24 +63,25 @@ func getEnvValue(v string) string {
 }
 
 func userCreator(name string) (User, error) {
-	// TODO: Checking user existence
-	u := User{}
-	var err error
-	u.Id, err = idGenerator("u")
-	if err != nil {
-		return u, err
+	usr, err := userGetter("name", name)
+	if err == nil {
+		return usr, errors.New("User already exists")
 	}
-	u.Username = name
-	u.Created_at = time.Now()
-	b, err := bson.Marshal(u)
+	usr.Id, err = idGenerator("u")
 	if err != nil {
-		return u, err
+		return usr, err
+	}
+	usr.Username = name
+	usr.Created_at = time.Now()
+	b, err := bson.Marshal(usr)
+	if err != nil {
+		return usr, err
 	}
 	_, err = usersCollection.InsertOne(context.TODO(), b)
 	if err != nil {
-		return u, err
+		return usr, err
 	}
-	return u, nil
+	return usr, nil
 }
 
 func chatCreator(json_map map[string]interface{}) (Chat, error) {
@@ -100,7 +101,7 @@ func chatCreator(json_map map[string]interface{}) (Chat, error) {
 			case reflect.Slice:
 				s := reflect.ValueOf(v)
 				for i := 0; i < s.Len(); i++ {
-					usr, err = userGetter(fmt.Sprint(s.Index(i)))
+					usr, err = userGetter("id", fmt.Sprint(s.Index(i)))
 					if err != nil {
 						return chat, err
 					}
@@ -113,9 +114,9 @@ func chatCreator(json_map map[string]interface{}) (Chat, error) {
 	return chat, nil
 }
 
-func userGetter(id string) (User, error) {
+func userGetter(title string, value string) (User, error) {
 	var result User
-	res := usersCollection.FindOne(context.TODO(), bson.M{"id": id})
+	res := usersCollection.FindOne(context.TODO(), bson.M{title: value})
 	err := res.Decode(result)
 	if err != nil {
 		return result, errors.New("User not found")
