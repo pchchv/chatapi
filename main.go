@@ -81,6 +81,11 @@ func userCreator(name string) (User, error) {
 	return u, nil
 }
 
+func chatCreator(json_map map[string]interface{}) (Chat, error) {
+	var chat Chat
+	return chat, nil
+}
+
 func idGenerator(mode string) (string, error) {
 	id := strGenerator(numbers, 1+rand.Intn(5)) + strGenerator(letters+numbers, 1+rand.Intn(5))
 	switch mode {
