@@ -22,3 +22,7 @@ func getEnvValue(v string) string {
 	}
 	return value
 }
+
+func main() {
+	server()
+}
