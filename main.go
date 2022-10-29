@@ -123,6 +123,19 @@ func chatCreator(json_map map[string]interface{}) (Chat, error) {
 	return chat, nil
 }
 
+func messageCreator(json_map map[string]interface{}) (Message, error) {
+	var message Message
+	var err error
+	message.Id, err = idGenerator("m")
+	if err != nil {
+		return message, err
+	}
+	for k, v := range json_map {
+		fmt.Println(k, v)
+	}
+	return message, err
+}
+
 func userGetter(title string, value string) (User, error) {
 	var result User
 	res := usersCollection.FindOne(context.TODO(), bson.M{title: value})
@@ -157,6 +170,6 @@ func strGenerator(charset string, length int) string {
 }
 
 func main() {
-	db()
+	// db()
 	server()
 }
