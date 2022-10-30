@@ -15,7 +15,7 @@ func pingHandler(c echo.Context) error {
 	return c.String(http.StatusOK, message)
 }
 
-func addUser(c echo.Context) error {
+func addUserHandler(c echo.Context) error {
 	username := c.QueryParam("name")
 	user, err := userCreator(username)
 	if err != nil {
@@ -24,7 +24,7 @@ func addUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func addChat(c echo.Context) error {
+func addChatHandler(c echo.Context) error {
 	json_map := make(map[string]interface{})
 	err := json.NewDecoder(c.Request().Body).Decode(&json_map)
 	if err != nil {
@@ -37,7 +37,7 @@ func addChat(c echo.Context) error {
 	return c.JSON(http.StatusOK, chat)
 }
 
-func addMessage(c echo.Context) error {
+func addMessageHandler(c echo.Context) error {
 	json_map := make(map[string]interface{})
 	err := json.NewDecoder(c.Request().Body).Decode(&json_map)
 	if err != nil {
@@ -54,9 +54,9 @@ func addMessage(c echo.Context) error {
 func routes(e *echo.Echo) {
 	e.GET("/", pingHandler)
 	e.GET("/ping", pingHandler)
-	e.POST("/user", addUser)
-	e.POST("/chat", addChat)
-	e.POST("/message", addMessage)
+	e.POST("/user", addUserHandler)
+	e.POST("/chat", addChatHandler)
+	e.POST("/message", addMessageHandler)
 }
 
 func server() {
