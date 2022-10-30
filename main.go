@@ -172,6 +172,24 @@ func chatGetter(title string, value string) (Chat, error) {
 }
 
 func chatsFinder(userId string) (chats []Chat, err error) {
+	cursor, err := chatsCollection.Find(context.TODO(), bson.M{})
+	if err != nil {
+		return
+	}
+	defer cursor.Close(context.TODO())
+	for cursor.Next(context.TODO()) {
+		var chat Chat
+		err = cursor.Decode(&chat)
+		if err != nil {
+			return
+		}
+		for _, user := range chat.Users {
+			if user.Id == userId {
+				chats = append(chats, chat)
+				break
+			}
+		}
+	}
 	return
 }
 
