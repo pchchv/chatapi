@@ -61,7 +61,7 @@
 ```
 
 ```
-"GET" /user/chat — Get a list of the user's chats
+"GET" /user/chats — Get a list of the user's chats
     options:
         user — User id
 
