@@ -85,13 +85,11 @@ func userCreator(name string) (User, error) {
 	return usr, nil
 }
 
-func chatCreator(json_map map[string]interface{}) (Chat, error) {
-	var chat Chat
+func chatCreator(json_map map[string]interface{}) (chat Chat, err error) {
 	var usr User
-	var err error
 	chat.Id, err = idGenerator("c")
 	if err != nil {
-		return chat, err
+		return
 	}
 	for k, v := range json_map {
 		switch k {
@@ -104,7 +102,7 @@ func chatCreator(json_map map[string]interface{}) (Chat, error) {
 				for i := 0; i < s.Len(); i++ {
 					usr, err = userGetter("id", fmt.Sprint(s.Index(i)))
 					if err != nil {
-						return chat, err
+						return
 					}
 					chat.Users = append(chat.Users, usr)
 				}
@@ -114,21 +112,19 @@ func chatCreator(json_map map[string]interface{}) (Chat, error) {
 	chat.Created_at = time.Now()
 	b, err := bson.Marshal(usr)
 	if err != nil {
-		return chat, err
+		return
 	}
 	_, err = chatsCollection.InsertOne(context.TODO(), b)
 	if err != nil {
-		return chat, err
+		return
 	}
 	return chat, nil
 }
 
-func messageCreator(json_map map[string]interface{}) (Message, error) {
-	var message Message
-	var err error
+func messageCreator(json_map map[string]interface{}) (message Message, err error) {
 	message.Id, err = idGenerator("m")
 	if err != nil {
-		return message, err
+		return
 	}
 	for k, v := range json_map {
 		switch k {
@@ -138,37 +134,37 @@ func messageCreator(json_map map[string]interface{}) (Message, error) {
 			_ = fmt.Sprint(v)
 			message.Chat, err = chatGetter("id", fmt.Sprint(v))
 			if err != nil {
-				return message, err
+				return
 			}
 		case "author":
 			message.Author, err = userGetter("id", fmt.Sprint(v))
 			if err != nil {
-				return message, err
+				return
 			}
 		}
 	}
 	message.Created_at = time.Now()
-	return message, err
+	return message, nil
 }
 
 func userGetter(title string, value string) (User, error) {
-	var result User
+	var user User
 	res := usersCollection.FindOne(context.TODO(), bson.M{title: value})
-	err := res.Decode(result)
+	err := res.Decode(user)
 	if err != nil {
-		return result, errors.New("User not found")
+		return user, errors.New("User not found")
 	}
-	return result, nil
+	return user, nil
 }
 
 func chatGetter(title string, value string) (Chat, error) {
-	var result Chat
+	var chat Chat
 	res := chatsCollection.FindOne(context.TODO(), bson.M{title: value})
-	err := res.Decode(result)
+	err := res.Decode(chat)
 	if err != nil {
-		return result, errors.New("Chat not found")
+		return chat, errors.New("Chat not found")
 	}
-	return result, nil
+	return chat, nil
 }
 
 func chatsFinder(userId string) (chats []Chat, err error) {
