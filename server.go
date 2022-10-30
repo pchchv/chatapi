@@ -50,10 +50,20 @@ func addMessageHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, message)
 }
 
+func usersChatsHandler(c echo.Context) error {
+	userId := c.QueryParam("user")
+	chats, err := chatsFinder(userId)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	return c.JSON(http.StatusOK, chats)
+}
+
 // The declaration of all routes comes from it
 func routes(e *echo.Echo) {
 	e.GET("/", pingHandler)
 	e.GET("/ping", pingHandler)
+	e.GET("/user/chats", usersChatsHandler)
 	e.POST("/user", addUserHandler)
 	e.POST("/chat", addChatHandler)
 	e.POST("/message", addMessageHandler)

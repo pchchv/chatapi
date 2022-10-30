@@ -171,6 +171,10 @@ func chatGetter(title string, value string) (Chat, error) {
 	return result, nil
 }
 
+func chatsFinder(userId string) (chats []Chat, err error) {
+	return
+}
+
 func idGenerator(mode string) (string, error) {
 	id := strGenerator(numbers, 1+rand.Intn(5)) + strGenerator(letters+numbers, 1+rand.Intn(5))
 	switch mode {
