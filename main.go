@@ -200,6 +200,9 @@ func deleter(mode string, ids []string) error {
 		if err != nil {
 			return err
 		}
+	case "message":
+		return errors.New("Error")
+		// TODO: Need to change the structure of the chat
 	}
 	return nil
 }
