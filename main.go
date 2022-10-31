@@ -194,6 +194,13 @@ func messageFinder(chatId string) (messages []Message, err error) {
 }
 
 func deleter(mode string, ids []string) error {
+	switch mode {
+	case "chat":
+		_, err := chatsCollection.DeleteOne(context.TODO(), bson.M{"id": ids[0]})
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
