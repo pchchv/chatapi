@@ -193,6 +193,10 @@ func messageFinder(chatId string) (messages []Message, err error) {
 	return
 }
 
+func deleter(mode string, ids []string) error {
+	return nil
+}
+
 func idGenerator(mode string) (string, error) {
 	id := strGenerator(numbers, 1+rand.Intn(5)) + strGenerator(letters+numbers, 1+rand.Intn(5))
 	switch mode {

@@ -94,12 +94,12 @@
         message — Message id
 
     example: 
-        "DELETE" :9000/chat?chat=xx000fd1,message=00031
+        "DELETE" :9000/message?chat=xx000fd1,message=00031
 ```
 
 ```
 "DELETE" /chat/all — Delete all chats
 
     example: 
-        "DELETE" :9000/
+        "DELETE" :9000/chat/all
 ```

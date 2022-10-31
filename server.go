@@ -68,6 +68,15 @@ func chatMessagesHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, messages)
 }
 
+func deleteChatHandler(c echo.Context) error {
+	chatId := c.QueryParam("chat")
+	err := deleter("chat", []string{chatId})
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	return c.NoContent(http.StatusOK)
+}
+
 // The declaration of all routes comes from it
 func routes(e *echo.Echo) {
 	e.GET("/", pingHandler)
@@ -77,6 +86,7 @@ func routes(e *echo.Echo) {
 	e.POST("/user", addUserHandler)
 	e.POST("/chat", addChatHandler)
 	e.POST("/message", addMessageHandler)
+	e.DELETE("/chat", deleteChatHandler)
 }
 
 func server() {
