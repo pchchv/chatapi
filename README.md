@@ -28,7 +28,7 @@
         name — User name 
 
     example: 
-        "POST" :9000/user/add?name=Jack
+        "POST" :9000/user?name=Jack
 ```
 
 ```
