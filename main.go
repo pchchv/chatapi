@@ -203,6 +203,11 @@ func deleter(mode string, ids []string) error {
 	case "message":
 		return errors.New("Error")
 		// TODO: Need to change the structure of the chat
+	case "all":
+		_, err := chatsCollection.DeleteMany(context.TODO(), bson.M{})
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
